@@ -1,6 +1,8 @@
-# flutube
+# FluTube
 
 Flutter plugin that facilitates the embed of YT videos without using the official YT API.
+
+Please not this is not yet published on Dart Pub as it is not finished.
 
 ## Getting Started
 
