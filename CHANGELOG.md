@@ -1,3 +1,7 @@
 ## 0.0.1
 
-* TODO: Describe initial release.
+* Initial release.
+
+### Known bugs
+
+* 'autoInitialize' property is not currently working. The controller initializes by itself.
