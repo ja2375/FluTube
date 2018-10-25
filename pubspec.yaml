@@ -1,6 +1,6 @@
 name: flutube
 description: Flutter plugin that facilitates the embed of YT videos without using the official YT API.
-version: 0.0.1
+version: 0.1.0
 author: Javi Hurtado <webmaster@javi-h.com>
 homepage: https://github.com/ja2375/FluTube
 
@@ -8,7 +8,7 @@ environment:
   sdk: ">=2.0.0-dev.68.0 <3.0.0"
 
 dependencies:
-  http: ^0.12.0
+  http: ^0.11.3
   open_iconic_flutter: ">=0.3.0 <0.4.0"
   video_player: ">=0.7.0 <0.8.0"
   flutter:

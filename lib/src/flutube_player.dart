@@ -4,7 +4,6 @@ import 'package:flutube/chewie/chewie_progress_colors.dart';
 import 'package:video_player/video_player.dart';
 
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class FluTube extends StatefulWidget {
   /// Youtube URL of the video
@@ -95,8 +94,16 @@ class _FluTubeState extends State<FluTube>{
   }
 
   Future<String> _fetchVideoURL(String yt) async {
-    final response = await http.get("https://you-link.herokuapp.com/?url=$yt");
-    final List _all = json.decode(response.body);
-    return _all[0]["url"];
+    final response = await http.get(yt);
+    Iterable parseAll = _allStringMatches(response.body, RegExp("\"url_encoded_fmt_stream_map\":\"([^\"]*)\""));
+    final Iterable<String> parse = _allStringMatches(parseAll.toList()[0], RegExp("url=(.*)"));
+    final List<String> urls = parse.toList()[0].split('url=');
+    parseAll = _allStringMatches(urls[1], RegExp("([^&,]*)[&,]"));
+    String finalUrl = Uri.decodeFull(parseAll.toList()[0]);
+    if(finalUrl.indexOf('\\u00') > -1)
+      finalUrl = finalUrl.substring(0, finalUrl.indexOf('\\u00'));
+    return finalUrl;
   }
+
+  Iterable<String> _allStringMatches(String text, RegExp regExp) => regExp.allMatches(text).map((m) => m.group(0));
 }
