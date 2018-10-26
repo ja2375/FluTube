@@ -1,13 +1,17 @@
 # FluTube
 
-Flutter plugin that facilitates the embed of YT videos without using the official YT API.
+Embed Youtube videos in your flutter apps just by passing in the video URL!
 
-This plugin uses the Youtube Link Deconstructor v3 API and allows you tu embed a Youtube video easily in your Flutter app just by passing it the video URL!
+This plugin uses an in-built API so the official YT API is not used here and therefore you don't need any API keys.
 
-This plugin uses the great plugin [Chewie](https://github.com/brianegan/chewie) to provide a nice material or cupertino video player. And please note this plugin is NOT a replacement for Chewie. Chewie is a great plugin and here we are just using it.
+This plugin also uses the great plugin [Chewie](https://github.com/brianegan/chewie) to provide a nice material or cupertino video player. And please note this plugin is NOT a replacement for Chewie. Chewie is a great plugin and here we are just using it.
 I have updated Chewie with some of the pull requests it had on the original repo as well.
 
 Huge thank you to [@brianegan](https://github.com/brianegan) for developing Chewie.
+
+## Demo
+
+![Demo](https://github.com/ja2375/FluTube/raw/master/example/Screenshot.jpg)
 
 ## Installation
 
