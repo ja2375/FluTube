@@ -15,7 +15,7 @@ In your `pubspec.yaml` file within your Flutter Project:
 
 ```yaml
 dependencies:
-  flutube: <latest_version>
+  flutube: ^0.1.1
 ```
 
 ## Use it
