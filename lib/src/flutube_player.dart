@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutube/chewie/chewie_player.dart';
 import 'package:flutube/chewie/chewie_progress_colors.dart';
@@ -42,6 +43,9 @@ class FluTube extends StatefulWidget {
   /// or played.
   final Widget placeholder;
 
+  /// Whether or not to show the video thumbnail when the video did not start playing.
+  final bool showThumb;
+
   FluTube(
     this.videourl, {
     Key key,
@@ -54,6 +58,7 @@ class FluTube extends StatefulWidget {
     this.materialProgressColors,
     this.placeholder,
     this.showControls = true,
+    this.showThumb = true,
   }) : super(key: key);
 
   @override
@@ -67,17 +72,48 @@ class _FluTubeState extends State<FluTube>{
   initState() {
     _fetchVideoURL(widget.videourl).then((uri) {
       setState(() {
-        _controller = VideoPlayerController.network(uri)
-        ..initialize();
+        _controller = VideoPlayerController.network(uri);
       });
     });
     super.initState();
   }
 
   @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return _controller == null ?
-    Container() :
+    return _controller == null || !_controller.value.isPlaying ?
+    Container(
+      constraints: BoxConstraints(
+        maxHeight: 250.0,
+      ),
+      child: widget.showThumb ? Stack(
+        children: <Widget>[
+          Image.network(
+            _videoThumbURL(widget.videourl),
+            fit: BoxFit.cover,
+          ),
+          Center(
+            child: IconButton(
+              icon: Icon(
+                Icons.play_circle_filled,
+                size: 100.0,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                setState(() {
+                  _controller.play();
+                });
+              },
+            ),
+          ),
+        ],
+      ) : null,
+    ) :
     Chewie(
       _controller,
       key: widget.key,
@@ -106,4 +142,11 @@ class _FluTubeState extends State<FluTube>{
   }
 
   Iterable<String> _allStringMatches(String text, RegExp regExp) => regExp.allMatches(text).map((m) => m.group(0));
+
+  String _videoThumbURL(String yt) {
+    String id = yt.substring(yt.indexOf('v=') + 2);
+    if(id.contains('&'))
+      id = id.substring(0, id.indexOf('&'));
+    return "http://img.youtube.com/vi/${id}/0.jpg";
+  }
 }
