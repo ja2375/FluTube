@@ -1,6 +1,6 @@
 ## 0.1.2
 
-* Fixed a bug which made 'autoStart' property not work without setting 'autoInitialize' to true.
+* Fixed a bug which made `autoStart` property not work without setting `autoInitialize` to true.
 
 ## 0.1.1
 
