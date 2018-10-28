@@ -1,3 +1,7 @@
+## 0.1.2
+
+* Fixed a bug which made 'autoStart' property not work without setting 'autoInitialize' to true.
+
 ## 0.1.1
 
 * Updated http dependency to allow installation on all Flutter channels.
@@ -9,7 +13,3 @@
 ## 0.0.1
 
 * Initial release.
-
-### Known bugs
-
-* 'autoInitialize' property is not currently working. The controller initializes by itself.

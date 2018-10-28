@@ -67,8 +67,7 @@ class _FluTubeState extends State<FluTube>{
   initState() {
     _fetchVideoURL(widget.videourl).then((uri) {
       setState(() {
-        _controller = VideoPlayerController.network(uri)
-        ..initialize();
+        _controller = VideoPlayerController.network(uri);
       });
     });
     super.initState();

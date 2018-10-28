@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
               Text('Youtube video URL: $_ytURL', style: TextStyle(fontSize: 16.0),),
               FluTube(
                 _ytURL,
-                autoPlay: true,
+                autoInitialize: true,
                 aspectRatio: 16 / 9,
               ),
             ],
