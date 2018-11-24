@@ -1,3 +1,8 @@
+## 0.2.0
+
+* Fix [#2](https://github.com/ja2375/FluTube/issues/2)
+* Fixed a potential bug that made videos don't stop playing when route was deactivated
+
 ## 0.1.2
 
 * Fixed a bug which made `autoStart` property not work without setting `autoInitialize` to true.

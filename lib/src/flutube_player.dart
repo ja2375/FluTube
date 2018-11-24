@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:flutube/chewie/chewie_player.dart';
 import 'package:flutube/chewie/chewie_progress_colors.dart';
 import 'package:video_player/video_player.dart';
@@ -62,15 +62,37 @@ class FluTube extends StatefulWidget {
 
 class _FluTubeState extends State<FluTube>{
   VideoPlayerController _controller;
+  bool _isPlaying = false;
 
   @override
   initState() {
     _fetchVideoURL(widget.videourl).then((uri) {
       setState(() {
-        _controller = VideoPlayerController.network(uri);
+        _controller = VideoPlayerController.network(uri)
+          ..addListener(() {
+            final bool isPlaying = _controller.value.isPlaying;
+            if (isPlaying != _isPlaying) {
+              setState(() {
+                _isPlaying = isPlaying;
+              });
+            }
+          });
       });
     });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  void deactivate() {
+    if(_isPlaying)
+      _controller.pause();
+    super.deactivate();
   }
 
   @override
