@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutube/flutube.dart';
-import 'package:flutube_example/test_video_route.dart';
+import 'test_video_route.dart';
 
 void main() => runApp(MaterialApp(
   home: MyApp(),
