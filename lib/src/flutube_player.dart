@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutube/chewie/chewie_player.dart';
-import 'package:flutube/chewie/chewie_progress_colors.dart';
+import 'package:chewie/chewie.dart';
 import 'package:video_player/video_player.dart';
 
 import 'package:http/http.dart' as http;
@@ -86,13 +85,6 @@ class _FluTubeState extends State<FluTube>{
   void dispose() {
     _controller.dispose();
     super.dispose();
-  }
-
-  @override
-  void deactivate() {
-    if(_isPlaying)
-      _controller.pause();
-    super.deactivate();
   }
 
   @override

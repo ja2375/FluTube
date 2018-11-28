@@ -1,3 +1,9 @@
+## 0.3.0
+
+* Updated Chewie to 0.8.0
+* Removed unnecessary code
+* Fixed bugs
+
 ## 0.2.0
 
 * Fix [#2](https://github.com/ja2375/FluTube/issues/2)

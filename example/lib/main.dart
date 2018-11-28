@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutube/flutube.dart';
-import 'test_video_route.dart';
 
 void main() => runApp(MaterialApp(
   home: MyApp(),
-  debugShowCheckedModeBanner: false,
 ));
 
 class MyApp extends StatelessWidget {
@@ -25,20 +23,6 @@ class MyApp extends StatelessWidget {
               autoInitialize: true,
               aspectRatio: 16 / 9,
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 15.0),
-              child: Center(
-                child: RaisedButton(
-                  child: Text('Test video in other route'),
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => TestRoute())
-                    );
-                  },
-                ),
-              ),
-            )
           ],
         ),
       ),
