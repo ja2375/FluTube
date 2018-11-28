@@ -2,7 +2,7 @@
 
 Embed Youtube videos in your flutter apps just by passing in the video URL!
 
-PLASE NOTE: Embedding copyrighted videos is actually not possible. Please use [flutter_youtube](https://pub.dartlang.org/packages/flutter_youtube) instead.
+PLEASE NOTE: Embedding copyrighted videos is actually not possible. Please use [flutter_youtube](https://pub.dartlang.org/packages/flutter_youtube) instead.
 
 This plugin uses an in-built API so the official YT API is not used here and therefore you don't need any API keys.
 
