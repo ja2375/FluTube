@@ -1,3 +1,8 @@
+## 0.3.1
+
+* Fix bugs
+* You can now access the inner video controller via `GlobalKey<FlutubeState>`
+
 ## 0.3.0
 
 * Updated Chewie to 0.8.0

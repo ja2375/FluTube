@@ -55,43 +55,43 @@ class FluTube extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _FluTubeState createState() => _FluTubeState();
+  FluTubeState createState() => FluTubeState();
 }
 
-class _FluTubeState extends State<FluTube>{
-  VideoPlayerController _controller;
+class FluTubeState extends State<FluTube>{
+  VideoPlayerController controller;
   bool _isPlaying = false;
+  bool get isPlaying => _isPlaying;
 
   @override
   initState() {
-    _fetchVideoURL(widget.videourl).then((uri) {
+    super.initState();
+    _fetchVideoURL(widget.videourl).then((url) {
       setState(() {
-        _controller = VideoPlayerController.network(uri)
+        controller = VideoPlayerController.network(url)
           ..addListener(() {
-            final bool isPlaying = _controller.value.isPlaying;
-            if (isPlaying != _isPlaying) {
+            if(_isPlaying != controller.value.isPlaying)
               setState(() {
-                _isPlaying = isPlaying;
+                _isPlaying = controller.value.isPlaying;
               });
-            }
           });
       });
     });
-    super.initState();
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    if(controller != null)
+      controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return _controller == null ?
+    return controller == null ?
     Container() :
     Chewie(
-      _controller,
+      controller,
       key: widget.key,
       aspectRatio: widget.aspectRatio,
       autoInitialize: widget.autoInitialize,
