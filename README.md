@@ -20,7 +20,7 @@ In your `pubspec.yaml` file within your Flutter Project:
 
 ```yaml
 dependencies:
-  flutube: ^0.3.1
+  flutube: ^0.4.0
 ```
 
 ## Use it
@@ -34,24 +34,6 @@ final flutubePlayer = Flutube(
   autoPlay: true,
   looping: true,
 );
-```
-
-## How to access `controller`?
-
-Just use a `GlobalKey<FluTubeState>` for this task.
-
-```dart
-final _key = GlobalKey<FluTubeState>();
-
-Flutube(
-  '<Youtube URL>',
-  key: _key,
-  aspectRatio: 16 / 9,
-  autoPlay: true,
-  looping: true,
-);
-
-VideoPlayerController controller = _key.currentState.controller;
 ```
 
 ## Example

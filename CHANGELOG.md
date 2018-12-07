@@ -1,3 +1,8 @@
+## 0.4.0
+
+* Added thumbnail to videos (thumbnail loads directly from YT)
+You can control whether you want to display the original video thumbnail with the `showThumb` property. The default value is `true`.
+
 ## 0.3.1
 
 * Fix bugs

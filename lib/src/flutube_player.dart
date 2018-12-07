@@ -64,8 +64,8 @@ class FluTube extends StatefulWidget {
 
 class FluTubeState extends State<FluTube>{
   VideoPlayerController controller;
-  bool _isPlaying = false;
-  bool get isPlaying => _isPlaying;
+  bool isPlaying = false;
+  bool _needsShowThumb = true;
 
   @override
   initState() {
@@ -74,10 +74,11 @@ class FluTubeState extends State<FluTube>{
       setState(() {
         controller = VideoPlayerController.network(url)
           ..addListener(() {
-            if(_isPlaying != controller.value.isPlaying)
+            if(isPlaying != controller.value.isPlaying){
               setState(() {
-                _isPlaying = controller.value.isPlaying;
+                isPlaying = controller.value.isPlaying;
               });
+            }
           });
       });
     });
@@ -91,54 +92,62 @@ class FluTubeState extends State<FluTube>{
   }
 
   @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return _controller == null || !_controller.value.isPlaying ?
-    Container(
-      constraints: BoxConstraints(
-        maxHeight: 250.0,
-      ),
-      child: widget.showThumb ? Stack(
-        children: <Widget>[
-          Image.network(
-            _videoThumbURL(widget.videourl),
-            fit: BoxFit.cover,
-          ),
-          Center(
-            child: IconButton(
-              icon: Icon(
-                Icons.play_circle_filled,
-                size: 100.0,
-                color: Colors.white,
-              ),
-              onPressed: () {
-                setState(() {
-                  _controller.play();
-                });
-              },
+    if(widget.showThumb && !isPlaying && _needsShowThumb){
+      return Center(
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          child: AspectRatio(
+            aspectRatio: widget.aspectRatio,
+            child: Stack(
+              fit: StackFit.expand,
+              children: <Widget>[
+                Image.network(
+                  _videoThumbURL(widget.videourl),
+                  fit: BoxFit.cover,
+                ),
+                Center(
+                  child: ClipOval(
+                    child: Container(
+                      color: Colors.white,
+                      child: IconButton(
+                        iconSize: 50.0,
+                        color: Colors.black,
+                        icon: Icon(
+                          Icons.play_arrow,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            controller.play();
+                            _needsShowThumb = false;
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-        ],
-      ) : null,
-    ) :
-    Chewie(
-      controller,
-      key: widget.key,
-      aspectRatio: widget.aspectRatio,
-      autoInitialize: widget.autoInitialize,
-      autoPlay: widget.autoPlay,
-      startAt: widget.startAt,
-      looping: widget.looping,
-      cupertinoProgressColors: widget.cupertinoProgressColors,
-      materialProgressColors: widget.materialProgressColors,
-      placeholder: widget.placeholder,
-      showControls: widget.showControls,
-    );
+        ),
+      );
+    } else {
+      return controller != null ? Chewie(
+        controller,
+        key: widget.key,
+        aspectRatio: widget.aspectRatio,
+        autoInitialize: widget.autoInitialize,
+        autoPlay: widget.autoPlay,
+        startAt: widget.startAt,
+        looping: widget.looping,
+        cupertinoProgressColors: widget.cupertinoProgressColors,
+        materialProgressColors: widget.materialProgressColors,
+        placeholder: widget.placeholder,
+        showControls: widget.showControls,
+      ) : Center(
+        child: CircularProgressIndicator(),
+      );
+    }
   }
 
   Future<String> _fetchVideoURL(String yt) async {
