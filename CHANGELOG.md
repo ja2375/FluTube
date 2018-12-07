@@ -1,8 +1,8 @@
-## 0.4.3
+## 0.4.3-4
 
 * Revert 0.4.2 as it was not working
 
-## 0.4.2
+## 0.4.1-2
 
 * Changed dispose approach trying to fix some errors derived from video disposal
 

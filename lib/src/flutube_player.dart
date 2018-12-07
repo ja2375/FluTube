@@ -86,10 +86,8 @@ class FluTubeState extends State<FluTube>{
 
   @override
   void dispose() {
-    if(!mounted){
-      if(controller != null)
-        controller.dispose();
-    }
+    if(controller != null)
+      controller.dispose();
     super.dispose();
   }
 
