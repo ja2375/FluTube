@@ -2,10 +2,11 @@
 
 Embed Youtube videos in your flutter apps just by passing in the video URL!
 
+PLEASE NOTE: Embedding copyrighted videos is actually not possible. Please use [flutter_youtube](https://pub.dartlang.org/packages/flutter_youtube) instead.
+
 This plugin uses an in-built API so the official YT API is not used here and therefore you don't need any API keys.
 
 This plugin also uses the great plugin [Chewie](https://github.com/brianegan/chewie) to provide a nice material or cupertino video player. And please note this plugin is NOT a replacement for Chewie. Chewie is a great plugin and here we are just using it.
-I have updated Chewie with some of the pull requests it had on the original repo as well.
 
 Huge thank you to [@brianegan](https://github.com/brianegan) for developing Chewie.
 
@@ -19,7 +20,7 @@ In your `pubspec.yaml` file within your Flutter Project:
 
 ```yaml
 dependencies:
-  flutube: ^0.1.1
+  flutube: ^0.3.1
 ```
 
 ## Use it
@@ -33,6 +34,24 @@ final flutubePlayer = Flutube(
   autoPlay: true,
   looping: true,
 );
+```
+
+## How to access `controller`?
+
+Just use a `GlobalKey<FluTubeState>` for this task.
+
+```dart
+final _key = GlobalKey<FluTubeState>();
+
+Flutube(
+  '<Youtube URL>',
+  key: _key,
+  aspectRatio: 16 / 9,
+  autoPlay: true,
+  looping: true,
+);
+
+VideoPlayerController controller = _key.currentState.controller;
 ```
 
 ## Example

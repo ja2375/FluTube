@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutube/chewie/chewie_player.dart';
-import 'package:flutube/chewie/chewie_progress_colors.dart';
-import 'package:video_player/video_player.dart';
-
+import 'package:chewie/chewie.dart';
 import 'package:http/http.dart' as http;
+import 'package:video_player/video_player.dart';
 
 class FluTube extends StatefulWidget {
   /// Youtube URL of the video
@@ -62,20 +59,35 @@ class FluTube extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _FluTubeState createState() => _FluTubeState();
+  FluTubeState createState() => FluTubeState();
 }
 
-class _FluTubeState extends State<FluTube>{
-  VideoPlayerController _controller;
+class FluTubeState extends State<FluTube>{
+  VideoPlayerController controller;
+  bool _isPlaying = false;
+  bool get isPlaying => _isPlaying;
 
   @override
   initState() {
-    _fetchVideoURL(widget.videourl).then((uri) {
+    super.initState();
+    _fetchVideoURL(widget.videourl).then((url) {
       setState(() {
-        _controller = VideoPlayerController.network(uri);
+        controller = VideoPlayerController.network(url)
+          ..addListener(() {
+            if(_isPlaying != controller.value.isPlaying)
+              setState(() {
+                _isPlaying = controller.value.isPlaying;
+              });
+          });
       });
     });
-    super.initState();
+  }
+
+  @override
+  void dispose() {
+    if(controller != null)
+      controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -115,7 +127,7 @@ class _FluTubeState extends State<FluTube>{
       ) : null,
     ) :
     Chewie(
-      _controller,
+      controller,
       key: widget.key,
       aspectRatio: widget.aspectRatio,
       autoInitialize: widget.autoInitialize,
