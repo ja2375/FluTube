@@ -1,4 +1,4 @@
-## 0.4.1
+## 0.4.2
 
 * Changed dispose approach trying to fix some errors derived from video disposal
 

@@ -126,8 +126,9 @@ class FluTubeState extends State<FluTube>{
       );
     } else {
       return controller != null ? WillPopScope(
-        onWillPop: () {
+        onWillPop: () async {
           controller.dispose();
+          return true;
         },
         child: Chewie(
           controller,
