@@ -85,6 +85,15 @@ class FluTubeState extends State<FluTube>{
   }
 
   @override
+  void dispose() {
+    if(!mounted){
+      if(controller != null)
+        controller.dispose();
+    }
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     if(widget.showThumb && !isPlaying && _needsShowThumb){
       return Center(
@@ -125,24 +134,18 @@ class FluTubeState extends State<FluTube>{
         ),
       );
     } else {
-      return controller != null ? WillPopScope(
-        onWillPop: () async {
-          controller.dispose();
-          return true;
-        },
-        child: Chewie(
-          controller,
-          key: widget.key,
-          aspectRatio: widget.aspectRatio,
-          autoInitialize: widget.autoInitialize,
-          autoPlay: widget.autoPlay,
-          startAt: widget.startAt,
-          looping: widget.looping,
-          cupertinoProgressColors: widget.cupertinoProgressColors,
-          materialProgressColors: widget.materialProgressColors,
-          placeholder: widget.placeholder,
-          showControls: widget.showControls,
-        ),
+      return controller != null ? Chewie(
+        controller,
+        key: widget.key,
+        aspectRatio: widget.aspectRatio,
+        autoInitialize: widget.autoInitialize,
+        autoPlay: widget.autoPlay,
+        startAt: widget.startAt,
+        looping: widget.looping,
+        cupertinoProgressColors: widget.cupertinoProgressColors,
+        materialProgressColors: widget.materialProgressColors,
+        placeholder: widget.placeholder,
+        showControls: widget.showControls,
       ) : Center(
         child: CircularProgressIndicator(),
       );
