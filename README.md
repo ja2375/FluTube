@@ -20,7 +20,7 @@ In your `pubspec.yaml` file within your Flutter Project:
 
 ```yaml
 dependencies:
-  flutube: ^0.4.0
+  flutube: ^0.4.1
 ```
 
 ## Use it

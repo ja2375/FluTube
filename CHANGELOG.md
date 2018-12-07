@@ -1,3 +1,7 @@
+## 0.4.1
+
+* Changed dispose approach trying to fix some errors derived from video disposal
+
 ## 0.4.0
 
 * Added thumbnail to videos (thumbnail loads directly from YT)
