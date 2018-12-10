@@ -1,3 +1,8 @@
+## 0.5.1
+
+* Fixed `autoPlay` not working due to video thumbnail
+* Added `fullscreenByDefault` property
+
 ## 0.5.0
 
 * Added `onVideoStart` and `onVideoEnd` (extremely useful) callbacks

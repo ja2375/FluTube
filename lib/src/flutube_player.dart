@@ -32,6 +32,9 @@ class FluTube extends StatefulWidget {
   /// or played.
   final Widget placeholder;
 
+  /// Play video directly in fullscreen
+  final bool fullscreenByDefault;
+
   /// Whether or not to show the video thumbnail when the video did not start playing.
   final bool showThumb;
 
@@ -53,6 +56,7 @@ class FluTube extends StatefulWidget {
     this.looping = false,
     this.placeholder,
     this.showControls = true,
+    this.fullscreenByDefault = false,
     this.showThumb = true,
     this.onVideoStart,
     this.onVideoEnd,
@@ -65,11 +69,12 @@ class FluTube extends StatefulWidget {
 class FluTubeState extends State<FluTube>{
   VideoPlayerController controller;
   bool isPlaying = false;
-  bool _needsShowThumb = true;
+  bool _needsShowThumb;
 
   @override
   initState() {
     super.initState();
+    _needsShowThumb = !widget.autoPlay;
     _fetchVideoURL(widget.videourl).then((url) {
       setState(() {
         controller = VideoPlayerController.network(url)
@@ -166,6 +171,7 @@ class FluTubeState extends State<FluTube>{
         looping: widget.looping,
         placeholder: widget.placeholder,
         showControls: widget.showControls,
+        fullScreenByDefault: widget.fullscreenByDefault,
       ) : Center(
         child: CircularProgressIndicator(),
       );
