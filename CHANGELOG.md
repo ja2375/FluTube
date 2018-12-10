@@ -1,3 +1,7 @@
+## 0.5.0
+
+* Added `onVideoStart` and `onVideoEnd` (extremely useful) callbacks
+
 ## 0.4.3-4
 
 * Revert 0.4.2 as it was not working
@@ -8,8 +12,7 @@
 
 ## 0.4.0
 
-* Added thumbnail to videos (thumbnail loads directly from YT)
-You can control whether you want to display the original video thumbnail with the `showThumb` property. The default value is `true`.
+* Added thumbnail to videos (thumbnail loads directly from YT). You can control whether you want to display the original video thumbnail with the `showThumb` property. The default value is `true`.
 
 ## 0.3.1
 

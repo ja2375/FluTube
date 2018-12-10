@@ -20,7 +20,7 @@ In your `pubspec.yaml` file within your Flutter Project:
 
 ```yaml
 dependencies:
-  flutube: ^0.4.4
+  flutube: ^0.5.0
 ```
 
 ## Use it
@@ -33,6 +33,8 @@ final flutubePlayer = Flutube(
   aspectRatio: 16 / 9,
   autoPlay: true,
   looping: true,
+  onVideoStart: () {),
+  onVideoEnd: () {},
 );
 ```
 

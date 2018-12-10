@@ -28,20 +28,20 @@ class FluTube extends StatefulWidget {
   /// Will fallback to fitting within the space allowed.
   final double aspectRatio;
 
-  /// The colors to use for controls on iOS. By default, the iOS player uses
-  /// colors sampled from the original iOS 11 designs.
-  final ChewieProgressColors cupertinoProgressColors;
-
-  /// The colors to use for the Material Progress Bar. By default, the Material
-  /// player uses the colors from your Theme.
-  final ChewieProgressColors materialProgressColors;
-
   /// The placeholder is displayed underneath the Video before it is initialized
   /// or played.
   final Widget placeholder;
 
   /// Whether or not to show the video thumbnail when the video did not start playing.
   final bool showThumb;
+
+  /// Video events
+
+  /// Video start
+  VoidCallback onVideoStart;
+
+  /// Video end
+  VoidCallback onVideoEnd;
 
   FluTube(
     this.videourl, {
@@ -51,11 +51,11 @@ class FluTube extends StatefulWidget {
     this.autoPlay = false,
     this.startAt,
     this.looping = false,
-    this.cupertinoProgressColors,
-    this.materialProgressColors,
     this.placeholder,
     this.showControls = true,
     this.showThumb = true,
+    this.onVideoStart,
+    this.onVideoEnd,
   }) : super(key: key);
 
   @override
@@ -79,7 +79,31 @@ class FluTubeState extends State<FluTube>{
                 isPlaying = controller.value.isPlaying;
               });
             }
+          })
+          ..addListener(() {
+            // Video end callback
+            if(controller.value.initialized && !widget.looping){
+              if(controller.value.position >= controller.value.duration){
+                if(widget.onVideoEnd != null)
+                  widget.onVideoEnd();
+                controller.pause();
+                controller.seekTo(Duration());
+                if(widget.showThumb){
+                  setState(() {
+                    _needsShowThumb = true;
+                  });
+                }
+              }
+            }
           });
+
+        // ideo start callback
+        if(widget.onVideoStart != null) {
+          controller.addListener(() {
+            if(controller.value.initialized && isPlaying)
+              widget.onVideoStart();
+          });
+        }
       });
     });
   }
@@ -140,8 +164,6 @@ class FluTubeState extends State<FluTube>{
         autoPlay: widget.autoPlay,
         startAt: widget.startAt,
         looping: widget.looping,
-        cupertinoProgressColors: widget.cupertinoProgressColors,
-        materialProgressColors: widget.materialProgressColors,
         placeholder: widget.placeholder,
         showControls: widget.showControls,
       ) : Center(
