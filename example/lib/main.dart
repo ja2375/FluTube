@@ -11,11 +11,16 @@ class MyApp extends StatefulWidget {
 }
 
 class MyAppState extends State<MyApp> {
-  final _ytURL = 'https://www.youtube.com/watch?v=fq4N0hgOWzU';
+  final List<String> playlist = <String>[
+    'https://www.youtube.com/watch?v=fq4N0hgOWzU',
+    'https://www.youtube.com/watch?v=D-o4BqJxmJE',
+  ];
+  int currentPos;
   String stateText;
 
   @override
   void initState() {
+    currentPos = 0;
     stateText = "Video not started";
     super.initState();
   }
@@ -29,9 +34,9 @@ class MyAppState extends State<MyApp> {
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            Text('Youtube video URL: $_ytURL', style: TextStyle(fontSize: 16.0),),
+            Text('Youtube video URL: ${playlist[currentPos]}', style: TextStyle(fontSize: 16.0),),
             FluTube(
-              _ytURL,
+              playlist[currentPos],
               autoInitialize: true,
               aspectRatio: 16 / 9,
               onVideoStart: () {
@@ -41,6 +46,8 @@ class MyAppState extends State<MyApp> {
               },
               onVideoEnd: () {
                 setState(() {
+                  if((currentPos + 1) < playlist.length)
+                    currentPos++;
                   stateText = 'Video ended playing!';
                 });
               },

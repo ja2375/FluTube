@@ -102,7 +102,7 @@ class FluTubeState extends State<FluTube>{
             }
           });
 
-        // ideo start callback
+        // Video start callback
         if(widget.onVideoStart != null) {
           controller.addListener(() {
             if(controller.value.initialized && isPlaying)
@@ -111,6 +111,52 @@ class FluTubeState extends State<FluTube>{
         }
       });
     });
+  }
+
+  @override
+  void didUpdateWidget(FluTube oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if(oldWidget.videourl != widget.videourl){
+      controller.dispose();
+      _fetchVideoURL(widget.videourl).then((newURL) {
+        controller = VideoPlayerController.network(newURL)
+          ..addListener(() {
+            if(isPlaying != controller.value.isPlaying){
+              setState(() {
+                isPlaying = controller.value.isPlaying;
+              });
+            }
+          })
+          ..addListener(() {
+            // Video end callback
+            if(controller.value.initialized && !widget.looping){
+              if(controller.value.position >= controller.value.duration){
+                if(controller.value.isPlaying){
+                  controller.seekTo(Duration());
+                  controller.pause();
+                }
+                if(widget.onVideoEnd != null)
+                  widget.onVideoEnd();
+                if(widget.showThumb){
+                  setState(() {
+                    _needsShowThumb = true;
+                  });
+                }
+              }
+            }
+          });
+
+        // Video start callback
+        if(widget.onVideoStart != null) {
+          controller.addListener(() {
+            if(controller.value.initialized && isPlaying)
+              widget.onVideoStart();
+          });
+        }
+        controller.play();
+      });
+    }
   }
 
   @override

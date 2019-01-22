@@ -1,3 +1,7 @@
+## 0.6.0
+
+* Fixed bugs and added example on hos to implement a playlist
+
 ## 0.5.2
 
 * Fixed Stack overflow on videoEnd callback.
