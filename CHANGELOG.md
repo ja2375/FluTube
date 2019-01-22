@@ -1,3 +1,7 @@
+## 0.5.2
+
+* Fixed Stack overflow on videoEnd callback.
+
 ## 0.5.1
 
 * Fixed `autoPlay` not working due to video thumbnail

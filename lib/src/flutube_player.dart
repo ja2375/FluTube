@@ -89,10 +89,10 @@ class FluTubeState extends State<FluTube>{
             // Video end callback
             if(controller.value.initialized && !widget.looping){
               if(controller.value.position >= controller.value.duration){
+                controller.seekTo(Duration());
+                controller.pause();
                 if(widget.onVideoEnd != null)
                   widget.onVideoEnd();
-                controller.pause();
-                controller.seekTo(Duration());
                 if(widget.showThumb){
                   setState(() {
                     _needsShowThumb = true;
@@ -172,8 +172,11 @@ class FluTubeState extends State<FluTube>{
         placeholder: widget.placeholder,
         showControls: widget.showControls,
         fullScreenByDefault: widget.fullscreenByDefault,
-      ) : Center(
-        child: CircularProgressIndicator(),
+      ) : AspectRatio(
+        aspectRatio: widget.aspectRatio,
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
       );
     }
   }
