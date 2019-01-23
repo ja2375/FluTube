@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:chewie/chewie.dart';
 import 'package:http/http.dart' as http;
@@ -76,40 +78,40 @@ class FluTubeState extends State<FluTube>{
     super.initState();
     _needsShowThumb = !widget.autoPlay;
     _fetchVideoURL(widget.videourl).then((url) {
-      setState(() {
-        controller = VideoPlayerController.network(url)
-          ..addListener(() {
-            if(isPlaying != controller.value.isPlaying){
-              setState(() {
-                isPlaying = controller.value.isPlaying;
-              });
-            }
-          })
-          ..addListener(() {
-            // Video end callback
-            if(controller.value.initialized && !widget.looping){
-              if(controller.value.position >= controller.value.duration){
+      controller = VideoPlayerController.network(url)
+        ..addListener(() {
+          if(isPlaying != controller.value.isPlaying){
+            setState(() {
+              isPlaying = controller.value.isPlaying;
+            });
+          }
+        })
+        ..addListener(() {
+          // Video end callback
+          if(controller.value.initialized && !widget.looping){
+            if(controller.value.position >= controller.value.duration){
+              if(controller.value.isPlaying) {
                 controller.seekTo(Duration());
                 controller.pause();
-                if(widget.onVideoEnd != null)
-                  widget.onVideoEnd();
-                if(widget.showThumb){
-                  setState(() {
-                    _needsShowThumb = true;
-                  });
-                }
+              }
+              if(widget.onVideoEnd != null)
+                widget.onVideoEnd();
+              if(widget.showThumb){
+                setState(() {
+                  _needsShowThumb = true;
+                });
               }
             }
-          });
+          }
+        });
 
-        // Video start callback
-        if(widget.onVideoStart != null) {
-          controller.addListener(() {
-            if(controller.value.initialized && isPlaying)
-              widget.onVideoStart();
-          });
-        }
-      });
+      // Video start callback
+      if(widget.onVideoStart != null) {
+        controller.addListener(() {
+          if(controller.value.initialized && isPlaying)
+            widget.onVideoStart();
+        });
+      }
     });
   }
 
@@ -245,6 +247,6 @@ class FluTubeState extends State<FluTube>{
     String id = yt.substring(yt.indexOf('v=') + 2);
     if(id.contains('&'))
       id = id.substring(0, id.indexOf('&'));
-    return "http://img.youtube.com/vi/${id}/0.jpg";
+    return "http://img.youtube.com/vi/$id/0.jpg";
   }
 }

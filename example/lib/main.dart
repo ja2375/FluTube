@@ -46,9 +46,9 @@ class MyAppState extends State<MyApp> {
               },
               onVideoEnd: () {
                 setState(() {
+                  stateText = 'Video ended playing!';
                   if((currentPos + 1) < playlist.length)
                     currentPos++;
-                  stateText = 'Video ended playing!';
                 });
               },
             ),

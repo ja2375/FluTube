@@ -1,3 +1,7 @@
+## 0.6.1
+
+* Fix minor bugs
+
 ## 0.6.0
 
 * Fixed bugs and added example on hos to implement a playlist
