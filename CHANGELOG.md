@@ -1,3 +1,7 @@
+## 0.6.2
+
+* Fix copy-paste issue
+
 ## 0.6.1
 
 * Fix minor bugs

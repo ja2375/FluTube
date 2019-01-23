@@ -78,40 +78,42 @@ class FluTubeState extends State<FluTube>{
     super.initState();
     _needsShowThumb = !widget.autoPlay;
     _fetchVideoURL(widget.videourl).then((url) {
-      controller = VideoPlayerController.network(url)
-        ..addListener(() {
-          if(isPlaying != controller.value.isPlaying){
-            setState(() {
-              isPlaying = controller.value.isPlaying;
-            });
-          }
-        })
-        ..addListener(() {
-          // Video end callback
-          if(controller.value.initialized && !widget.looping){
-            if(controller.value.position >= controller.value.duration){
-              if(controller.value.isPlaying) {
-                controller.seekTo(Duration());
-                controller.pause();
-              }
-              if(widget.onVideoEnd != null)
-                widget.onVideoEnd();
-              if(widget.showThumb){
-                setState(() {
-                  _needsShowThumb = true;
-                });
+      setState(() {
+        controller = VideoPlayerController.network(url)
+          ..addListener(() {
+            if(isPlaying != controller.value.isPlaying){
+              setState(() {
+                isPlaying = controller.value.isPlaying;
+              });
+            }
+          })
+          ..addListener(() {
+            // Video end callback
+            if(controller.value.initialized && !widget.looping){
+              if(controller.value.position >= controller.value.duration){
+                if(controller.value.isPlaying) {
+                  controller.seekTo(Duration());
+                  controller.pause();
+                }
+                if(widget.onVideoEnd != null)
+                  widget.onVideoEnd();
+                if(widget.showThumb){
+                  setState(() {
+                    _needsShowThumb = true;
+                  });
+                }
               }
             }
-          }
-        });
+          });
 
-      // Video start callback
-      if(widget.onVideoStart != null) {
-        controller.addListener(() {
-          if(controller.value.initialized && isPlaying)
-            widget.onVideoStart();
-        });
-      }
+        // Video start callback
+        if(widget.onVideoStart != null) {
+          controller.addListener(() {
+            if(controller.value.initialized && isPlaying)
+              widget.onVideoStart();
+          });
+        }
+      });
     });
   }
 
