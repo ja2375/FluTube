@@ -1,3 +1,7 @@
+## 0.7.0
+
+* Updated to work with Chewie ^0.9.0
+
 ## 0.6.2
 
 * Fix copy-paste issue

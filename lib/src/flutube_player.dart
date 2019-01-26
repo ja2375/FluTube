@@ -69,7 +69,8 @@ class FluTube extends StatefulWidget {
 }
 
 class FluTubeState extends State<FluTube>{
-  VideoPlayerController controller;
+  VideoPlayerController videoController;
+  ChewieController chewieController;
   bool isPlaying = false;
   bool _needsShowThumb;
 
@@ -79,21 +80,21 @@ class FluTubeState extends State<FluTube>{
     _needsShowThumb = !widget.autoPlay;
     _fetchVideoURL(widget.videourl).then((url) {
       setState(() {
-        controller = VideoPlayerController.network(url)
+        videoController = VideoPlayerController.network(url)
           ..addListener(() {
-            if(isPlaying != controller.value.isPlaying){
+            if(isPlaying != videoController.value.isPlaying){
               setState(() {
-                isPlaying = controller.value.isPlaying;
+                isPlaying = videoController.value.isPlaying;
               });
             }
           })
           ..addListener(() {
             // Video end callback
-            if(controller.value.initialized && !widget.looping){
-              if(controller.value.position >= controller.value.duration){
-                if(controller.value.isPlaying) {
-                  controller.seekTo(Duration());
-                  controller.pause();
+            if(videoController.value.initialized && !widget.looping){
+              if(videoController.value.position >= videoController.value.duration){
+                if(isPlaying){
+                  chewieController.pause();
+                  chewieController.seekTo(Duration());
                 }
                 if(widget.onVideoEnd != null)
                   widget.onVideoEnd();
@@ -108,11 +109,23 @@ class FluTubeState extends State<FluTube>{
 
         // Video start callback
         if(widget.onVideoStart != null) {
-          controller.addListener(() {
-            if(controller.value.initialized && isPlaying)
+          videoController.addListener(() {
+            if(videoController.value.initialized && isPlaying)
               widget.onVideoStart();
           });
         }
+
+        chewieController = ChewieController(
+          videoPlayerController: videoController,
+          aspectRatio: widget.aspectRatio,
+          autoInitialize: widget.autoInitialize,
+          autoPlay: widget.autoPlay,
+          startAt: widget.startAt,
+          looping: widget.looping,
+          placeholder: widget.placeholder,
+          showControls: widget.showControls,
+          fullScreenByDefault: widget.fullscreenByDefault,
+        );
       });
     });
   }
@@ -122,23 +135,24 @@ class FluTubeState extends State<FluTube>{
     super.didUpdateWidget(oldWidget);
 
     if(oldWidget.videourl != widget.videourl){
-      controller.dispose();
+      videoController.dispose();
+      chewieController.dispose();
       _fetchVideoURL(widget.videourl).then((newURL) {
-        controller = VideoPlayerController.network(newURL)
+        videoController = VideoPlayerController.network(newURL)
           ..addListener(() {
-            if(isPlaying != controller.value.isPlaying){
+            if(isPlaying != videoController.value.isPlaying){
               setState(() {
-                isPlaying = controller.value.isPlaying;
+                isPlaying = videoController.value.isPlaying;
               });
             }
           })
           ..addListener(() {
             // Video end callback
-            if(controller.value.initialized && !widget.looping){
-              if(controller.value.position >= controller.value.duration){
-                if(controller.value.isPlaying){
-                  controller.seekTo(Duration());
-                  controller.pause();
+            if(videoController.value.initialized && !widget.looping){
+              if(videoController.value.position >= videoController.value.duration){
+                if(isPlaying){
+                  chewieController.pause();
+                  chewieController.seekTo(Duration());
                 }
                 if(widget.onVideoEnd != null)
                   widget.onVideoEnd();
@@ -153,20 +167,25 @@ class FluTubeState extends State<FluTube>{
 
         // Video start callback
         if(widget.onVideoStart != null) {
-          controller.addListener(() {
-            if(controller.value.initialized && isPlaying)
+          videoController.addListener(() {
+            if(videoController.value.initialized && isPlaying)
               widget.onVideoStart();
           });
         }
-        controller.play();
+
+        chewieController = ChewieController(
+          videoPlayerController: videoController,
+          aspectRatio: widget.aspectRatio,
+          autoPlay: true,
+        );
       });
     }
   }
 
   @override
   void dispose() {
-    if(controller != null)
-      controller.dispose();
+    videoController.dispose();
+    chewieController.dispose();
     super.dispose();
   }
 
@@ -197,7 +216,7 @@ class FluTubeState extends State<FluTube>{
                         ),
                         onPressed: () {
                           setState(() {
-                            controller.play();
+                            videoController.play();
                             _needsShowThumb = false;
                           });
                         },
@@ -211,17 +230,9 @@ class FluTubeState extends State<FluTube>{
         ),
       );
     } else {
-      return controller != null ? Chewie(
-        controller,
+      return chewieController != null ? Chewie(
         key: widget.key,
-        aspectRatio: widget.aspectRatio,
-        autoInitialize: widget.autoInitialize,
-        autoPlay: widget.autoPlay,
-        startAt: widget.startAt,
-        looping: widget.looping,
-        placeholder: widget.placeholder,
-        showControls: widget.showControls,
-        fullScreenByDefault: widget.fullscreenByDefault,
+        controller: chewieController,
       ) : AspectRatio(
         aspectRatio: widget.aspectRatio,
         child: Center(
