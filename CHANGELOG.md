@@ -1,3 +1,7 @@
+## 0.7.1
+
+* Added options to allow muting, prevent screen sleep and controlling fullscreen mode.
+
 ## 0.7.0
 
 * Updated to work with Chewie ^0.9.0

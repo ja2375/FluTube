@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:chewie/chewie.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:video_player/video_player.dart';
 
@@ -30,6 +31,21 @@ class FluTube extends StatefulWidget {
   /// Will fallback to fitting within the space allowed.
   final double aspectRatio;
 
+  /// Allow screen to sleep
+  final bool allowScreenSleep;
+
+  /// Show mute icon
+  final bool allowMuting;
+
+  /// Show fullscreen button.
+  final bool allowFullScreen;
+
+  /// Device orientation when leaving fullscreen.
+  final List<DeviceOrientation> deviceOrientationAnterFullscreen;
+
+  /// System overlays when exiting fullscreen.
+  final List<SystemUiOverlay> systemOverlaysAfterFullscreen;
+
   /// The placeholder is displayed underneath the Video before it is initialized
   /// or played.
   final Widget placeholder;
@@ -43,10 +59,10 @@ class FluTube extends StatefulWidget {
   /// Video events
 
   /// Video start
-  VoidCallback onVideoStart;
+  final VoidCallback onVideoStart;
 
   /// Video end
-  VoidCallback onVideoEnd;
+  final VoidCallback onVideoEnd;
 
   FluTube(
     this.videourl, {
@@ -60,6 +76,11 @@ class FluTube extends StatefulWidget {
     this.showControls = true,
     this.fullscreenByDefault = false,
     this.showThumb = true,
+    this.allowMuting = true,
+    this.allowScreenSleep = false,
+    this.allowFullScreen = true,
+    this.deviceOrientationAnterFullscreen,
+    this.systemOverlaysAfterFullscreen,
     this.onVideoStart,
     this.onVideoEnd,
   }) : super(key: key);
@@ -125,6 +146,11 @@ class FluTubeState extends State<FluTube>{
           placeholder: widget.placeholder,
           showControls: widget.showControls,
           fullScreenByDefault: widget.fullscreenByDefault,
+          allowFullScreen: widget.allowFullScreen,
+          deviceOrientationsAfterFullScreen: widget.deviceOrientationAnterFullscreen,
+          systemOverlaysAfterFullScreen: widget.systemOverlaysAfterFullscreen,
+          allowedScreenSleep: widget.allowScreenSleep,
+          allowMuting: widget.allowMuting
         );
       });
     });

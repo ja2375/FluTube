@@ -39,6 +39,7 @@ class MyAppState extends State<MyApp> {
               playlist[currentPos],
               autoInitialize: true,
               aspectRatio: 16 / 9,
+              allowMuting: false,
               onVideoStart: () {
                 setState(() {
                   stateText = 'Video started playing!';
