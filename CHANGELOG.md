@@ -1,3 +1,7 @@
+## 0.7.3
+
+* Small bug fix
+
 ## 0.7.2
 
 * Deleted unnecesary files

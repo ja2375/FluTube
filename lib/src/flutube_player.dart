@@ -162,8 +162,8 @@ class FluTubeState extends State<FluTube>{
 
     if(oldWidget.videourl != widget.videourl){
       chewieController.dispose();
+      videoController.dispose();
       _fetchVideoURL(widget.videourl).then((newURL) {
-        videoController.dispose();
         videoController = VideoPlayerController.network(newURL)
           ..addListener(() {
             if(isPlaying != videoController.value.isPlaying){
