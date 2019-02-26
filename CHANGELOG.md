@@ -1,3 +1,8 @@
+## 0.7.2
+
+* Deleted unnecesary files
+* Updated dependencies
+
 ## 0.7.1
 
 * Added options to allow muting, prevent screen sleep and controlling fullscreen mode.
@@ -16,11 +21,11 @@
 
 ## 0.6.0
 
-* Fixed bugs and added example on hos to implement a playlist
+* Fixed bugs and added example on how to implement a playlist
 
 ## 0.5.2
 
-* Fixed Stack overflow on videoEnd callback.
+* Fixed possible stack overflow on videoEnd callback.
 
 ## 0.5.1
 
