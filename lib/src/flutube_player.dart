@@ -64,6 +64,9 @@ class FluTube extends StatefulWidget {
   /// Video end
   final VoidCallback onVideoEnd;
 
+  /// Video error
+  final VoidCallback onVideoError;
+
   FluTube(
     this.videourl, {
     Key key,
@@ -83,6 +86,7 @@ class FluTube extends StatefulWidget {
     this.systemOverlaysAfterFullscreen,
     this.onVideoStart,
     this.onVideoEnd,
+    this.onVideoError,
   }) : super(key: key);
 
   @override
@@ -126,6 +130,13 @@ class FluTubeState extends State<FluTube>{
                 }
               }
             }
+          })
+          ..addListener(() {
+            if(videoController.value.hasError){
+              if(widget.onVideoError != null) {
+                widget.onVideoError;
+              }
+            }
           });
 
         // Video start callback
@@ -151,7 +162,14 @@ class FluTubeState extends State<FluTube>{
           systemOverlaysAfterFullScreen: widget.systemOverlaysAfterFullscreen,
           allowedScreenSleep: widget.allowScreenSleep,
           allowMuting: widget.allowMuting
-        );
+        )
+        ..addListener(() {
+          if(chewieController.videoPlayerController.value.hasError) {
+            if(widget.onVideoError != null) {
+              widget.onVideoError;
+            }
+          }
+        });
       });
     });
   }
@@ -161,8 +179,10 @@ class FluTubeState extends State<FluTube>{
     super.didUpdateWidget(oldWidget);
 
     if(oldWidget.videourl != widget.videourl){
-      chewieController.dispose();
-      videoController.dispose();
+      if(videoController != null || chewieController != null) {
+        videoController.dispose();
+        chewieController.dispose();
+      }
       _fetchVideoURL(widget.videourl).then((newURL) {
         videoController = VideoPlayerController.network(newURL)
           ..addListener(() {
@@ -189,6 +209,13 @@ class FluTubeState extends State<FluTube>{
                 }
               }
             }
+          })
+          ..addListener(() {
+            if(videoController.value.hasError){
+              if(widget.onVideoError != null) {
+                widget.onVideoError;
+              }
+            }
           });
 
         // Video start callback
@@ -203,7 +230,14 @@ class FluTubeState extends State<FluTube>{
           videoPlayerController: videoController,
           aspectRatio: widget.aspectRatio,
           autoPlay: true,
-        );
+        )
+        ..addListener(() {
+          if(chewieController.videoPlayerController.value.hasError) {
+            if(widget.onVideoError != null) {
+              widget.onVideoError;
+            }
+          }
+        });
       });
     }
   }
