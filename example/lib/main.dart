@@ -14,7 +14,6 @@ class MyAppState extends State<MyApp> {
   final List<String> playlist = <String>[
     'https://www.youtube.com/watch?v=fq4N0hgOWzU',
     'https://www.youtube.com/watch?v=D-o4BqJxmJE',
-    'https://www.youtube.com/watch?v=jF0kD7lxTTw'
   ];
   int currentPos;
   String stateText;
@@ -53,25 +52,8 @@ class MyAppState extends State<MyApp> {
                     currentPos++;
                 });
               },
-              onVideoError: () {
-                setState(() {
-                  stateText = 'Video has error :/';
-                });
-              },
             ),
             Text(stateText),
-            Padding(
-              padding: EdgeInsets.only(top: 40.0),
-              child: FlatButton(
-                child: Text('CHANGE VIDEO URL'),
-                onPressed: () {
-                  setState(() {
-                    if((currentPos + 1) < playlist.length)
-                      currentPos++;
-                  });
-                },
-              ),
-            )
           ],
         ),
       ),
