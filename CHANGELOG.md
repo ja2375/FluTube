@@ -1,3 +1,7 @@
+## 0.8.0
+
+* Added native support for playlists
+
 ## 0.7.3
 
 * Small bug fix

@@ -7,8 +7,8 @@ import 'package:http/http.dart' as http;
 import 'package:video_player/video_player.dart';
 
 class FluTube extends StatefulWidget {
-  /// Youtube URL of the video
-  final String videourl;
+  /// Youtube video URL(s)
+  var _videourls;
 
   /// Initialize the Video on Startup. This will prep the video for playback.
   final bool autoInitialize;
@@ -65,7 +65,7 @@ class FluTube extends StatefulWidget {
   final VoidCallback onVideoEnd;
 
   FluTube(
-    this.videourl, {
+    @required String videourl, {
     Key key,
     this.aspectRatio,
     this.autoInitialize = false,
@@ -83,7 +83,33 @@ class FluTube extends StatefulWidget {
     this.systemOverlaysAfterFullscreen,
     this.onVideoStart,
     this.onVideoEnd,
-  }) : super(key: key);
+  }) : super(key: key) {
+    this._videourls = videourl;
+  }
+
+  FluTube.playlist(
+    @required List<String> playlist, {
+    Key key,
+    this.aspectRatio,
+    this.autoInitialize = false,
+    this.autoPlay = false,
+    this.startAt,
+    this.placeholder,
+    this.looping,
+    this.showControls = true,
+    this.fullscreenByDefault = false,
+    this.showThumb = true,
+    this.allowMuting = true,
+    this.allowScreenSleep = false,
+    this.allowFullScreen = true,
+    this.deviceOrientationAnterFullscreen,
+    this.systemOverlaysAfterFullscreen,
+    this.onVideoStart,
+    this.onVideoEnd,
+  }) : super(key: key) {
+    assert(playlist.length > 0, 'Playlist should not be empty!');
+    this._videourls = playlist;
+  }
 
   @override
   FluTubeState createState() => FluTubeState();
@@ -94,49 +120,43 @@ class FluTubeState extends State<FluTube>{
   ChewieController chewieController;
   bool isPlaying = false;
   bool _needsShowThumb;
+  List<String> _playlistUrls; // Internal list of initializaed video urls of a playlist
+  int _currentlyPlaying = 0; // Track position of currently playing video
+
+  bool get _isPlaylist => widget._videourls is List<String>;
 
   @override
   initState() {
     super.initState();
     _needsShowThumb = !widget.autoPlay;
-    _fetchVideoURL(widget.videourl).then((url) {
-      setState(() {
-        videoController = VideoPlayerController.network(url)
-          ..addListener(() {
-            if(isPlaying != videoController.value.isPlaying){
-              setState(() {
-                isPlaying = videoController.value.isPlaying;
-              });
-            }
-          })
-          ..addListener(() {
-            // Video end callback
-            if(videoController.value.initialized && !widget.looping){
-              if(videoController.value.position >= videoController.value.duration){
-                if(isPlaying){
-                  chewieController.pause();
-                  chewieController.seekTo(Duration());
-                }
-                if(widget.onVideoEnd != null)
-                  widget.onVideoEnd();
-                if(widget.showThumb){
-                  setState(() {
-                    _needsShowThumb = true;
-                  });
-                }
-              }
-            }
-          });
+    if(_isPlaylist) {
+      _playlistUrls = List();
+      _initialize((widget._videourls as List<String>)[0]); // Play the very first video of the playlist
 
-        // Video start callback
-        if(widget.onVideoStart != null) {
-          videoController.addListener(() {
-            if(videoController.value.initialized && isPlaying)
-              widget.onVideoStart();
-          });
-        }
+      _initializeAllVideos();
+    } else {
+      _initialize(widget._videourls as String);
+    }
+  }
 
-        chewieController = ChewieController(
+  _initializeAllVideos() async {
+    for(String url in widget._videourls as List<String>) {
+      _playlistUrls.add(await _fetchVideoURL(url));
+    }
+  }
+
+  void _initialize(String _url) {
+    _fetchVideoURL(_url).then((url) {
+      videoController = VideoPlayerController.network(url)
+        ..addListener(_playingListener)
+        ..addListener(_endListener);
+
+      // Video start callback
+      if(widget.onVideoStart != null) {
+        videoController.addListener(_startListener);
+      }
+
+      chewieController = ChewieController(
           videoPlayerController: videoController,
           aspectRatio: widget.aspectRatio,
           autoInitialize: widget.autoInitialize,
@@ -151,61 +171,68 @@ class FluTubeState extends State<FluTube>{
           systemOverlaysAfterFullScreen: widget.systemOverlaysAfterFullscreen,
           allowedScreenSleep: widget.allowScreenSleep,
           allowMuting: widget.allowMuting
-        );
-      });
+      );
     });
   }
 
-  @override
-  void didUpdateWidget(FluTube oldWidget) {
-    super.didUpdateWidget(oldWidget);
-
-    if(oldWidget.videourl != widget.videourl){
-      chewieController.dispose();
-      videoController.dispose();
-      _fetchVideoURL(widget.videourl).then((newURL) {
-        videoController = VideoPlayerController.network(newURL)
-          ..addListener(() {
-            if(isPlaying != videoController.value.isPlaying){
-              setState(() {
-                isPlaying = videoController.value.isPlaying;
-              });
-            }
-          })
-          ..addListener(() {
-            // Video end callback
-            if(videoController.value.initialized && !widget.looping){
-              if(videoController.value.position >= videoController.value.duration){
-                if(isPlaying){
-                  chewieController.pause();
-                  chewieController.seekTo(Duration());
-                }
-                if(widget.onVideoEnd != null)
-                  widget.onVideoEnd();
-                if(widget.showThumb){
-                  setState(() {
-                    _needsShowThumb = true;
-                  });
-                }
-              }
-            }
-          });
-
-        // Video start callback
-        if(widget.onVideoStart != null) {
-          videoController.addListener(() {
-            if(videoController.value.initialized && isPlaying)
-              widget.onVideoStart();
-          });
-        }
-
-        chewieController = ChewieController(
-          videoPlayerController: videoController,
-          aspectRatio: widget.aspectRatio,
-          autoPlay: true,
-        );
+  _playingListener() {
+    if(isPlaying != videoController.value.isPlaying){
+      setState(() {
+        isPlaying = videoController.value.isPlaying;
       });
     }
+  }
+
+  _startListener() {
+    if(videoController.value.initialized && isPlaying)
+      widget.onVideoStart();
+  }
+
+  _endListener() {
+    // Video end callback
+    if(videoController.value.initialized && !widget.looping){
+      if(videoController.value.position >= videoController.value.duration){
+        if(isPlaying){
+          chewieController.pause();
+          chewieController.seekTo(Duration());
+        }
+        if(widget.onVideoEnd != null)
+          widget.onVideoEnd();
+        if(widget.showThumb && !_isPlaylist){
+          setState(() {
+            _needsShowThumb = true;
+          });
+        }
+        if(_isPlaylist && _currentlyPlaying < _playlistUrls.length - 1){
+          _playlistLoadNext();
+        }
+      }
+    }
+  }
+
+  _playlistLoadNext() {
+    chewieController.dispose();
+    setState(() {
+      _currentlyPlaying++;
+    });
+    videoController.pause();
+    videoController = null;
+    videoController = VideoPlayerController.network(_playlistUrls[_currentlyPlaying]);
+    videoController.addListener(_playingListener);
+    videoController.addListener(_endListener);
+    chewieController = ChewieController(
+        videoPlayerController: videoController,
+        aspectRatio: widget.aspectRatio,
+        autoInitialize: true,
+        showControls: widget.showControls,
+        fullScreenByDefault: widget.fullscreenByDefault,
+        allowFullScreen: widget.allowFullScreen,
+        deviceOrientationsAfterFullScreen: widget.deviceOrientationAnterFullscreen,
+        systemOverlaysAfterFullScreen: widget.systemOverlaysAfterFullscreen,
+        allowedScreenSleep: widget.allowScreenSleep,
+        allowMuting: widget.allowMuting
+    );
+    chewieController.play();
   }
 
   @override
@@ -217,6 +244,7 @@ class FluTubeState extends State<FluTube>{
 
   @override
   Widget build(BuildContext context) {
+    print(_currentlyPlaying);
     if(widget.showThumb && !isPlaying && _needsShowThumb){
       return Center(
         child: Container(
@@ -227,7 +255,7 @@ class FluTubeState extends State<FluTube>{
               fit: StackFit.expand,
               children: <Widget>[
                 Image.network(
-                  _videoThumbURL(widget.videourl),
+                  _videoThumbURL(_isPlaylist ? widget._videourls[_currentlyPlaying] : widget._videourls),
                   fit: BoxFit.cover,
                 ),
                 Center(

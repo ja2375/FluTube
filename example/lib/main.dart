@@ -14,6 +14,8 @@ class MyAppState extends State<MyApp> {
   final List<String> playlist = <String>[
     'https://www.youtube.com/watch?v=fq4N0hgOWzU',
     'https://www.youtube.com/watch?v=D-o4BqJxmJE',
+    'https://www.youtube.com/watch?v=hA0hrpR-o8U',
+    'https://www.youtube.com/watch?v=RS36gBEp8OI',
   ];
   int currentPos;
   String stateText;
@@ -35,8 +37,8 @@ class MyAppState extends State<MyApp> {
         child: Column(
           children: <Widget>[
             Text('Youtube video URL: ${playlist[currentPos]}', style: TextStyle(fontSize: 16.0),),
-            FluTube(
-              playlist[currentPos],
+            FluTube.playlist(
+              playlist,
               autoInitialize: true,
               aspectRatio: 16 / 9,
               allowMuting: false,
