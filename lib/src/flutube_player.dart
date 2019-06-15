@@ -237,8 +237,8 @@ class FluTubeState extends State<FluTube>{
 
   @override
   void dispose() {
-    videoController.dispose();
-    chewieController.dispose();
+    if (videoController != null) videoController.dispose();
+    if (chewieController != null) chewieController.dispose();
     super.dispose();
   }
 
