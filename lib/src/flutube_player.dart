@@ -123,6 +123,7 @@ class FluTubeState extends State<FluTube>{
   List<String> _playlistUrls; // Internal list of initializaed video urls of a playlist
   int _currentlyPlaying = 0; // Track position of currently playing video
 
+  String _lastUrl;
   bool get _isPlaylist => widget._videourls is List<String>;
 
   @override
@@ -145,10 +146,17 @@ class FluTubeState extends State<FluTube>{
     }
   }
 
+  void _errorListener() {
+    if (!videoController.value.hasError) return;
+    if (videoController.value.errorDescription.contains("code: 403")) _initialize(_lastUrl);
+  }
+
   void _initialize(String _url) {
+    _lastUrl = _url;
     _fetchVideoURL(_url).then((url) {
       videoController = VideoPlayerController.network(url)
         ..addListener(_playingListener)
+        ..addListener(_errorListener)
         ..addListener(_endListener);
 
       // Video start callback
@@ -237,8 +245,8 @@ class FluTubeState extends State<FluTube>{
 
   @override
   void dispose() {
-    videoController.dispose();
-    chewieController.dispose();
+    if (videoController != null) videoController.dispose();
+    if (chewieController != null) chewieController.dispose();
     super.dispose();
   }
 
