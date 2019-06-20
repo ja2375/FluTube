@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutube/flutube.dart';
 
 void main() => runApp(MaterialApp(
@@ -42,6 +43,13 @@ class MyAppState extends State<MyApp> {
               autoInitialize: true,
               aspectRatio: 16 / 9,
               allowMuting: false,
+              looping: true,
+              deviceOrientationAnterFullscreen: [
+                DeviceOrientation.portraitUp,
+                DeviceOrientation.landscapeLeft,
+                DeviceOrientation.landscapeRight,
+              ],
+              systemOverlaysAfterFullscreen: SystemUiOverlay.values,
               onVideoStart: () {
                 setState(() {
                   stateText = 'Video started playing!';

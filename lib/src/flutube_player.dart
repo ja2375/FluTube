@@ -95,7 +95,7 @@ class FluTube extends StatefulWidget {
     this.autoPlay = false,
     this.startAt,
     this.placeholder,
-    this.looping,
+    this.looping = false,
     this.showControls = true,
     this.fullscreenByDefault = false,
     this.showThumb = true,
@@ -120,7 +120,6 @@ class FluTubeState extends State<FluTube>{
   ChewieController chewieController;
   bool isPlaying = false;
   bool _needsShowThumb;
-  List<String> _playlistUrls; // Internal list of initializaed video urls of a playlist
   int _currentlyPlaying = 0; // Track position of currently playing video
 
   String _lastUrl;
@@ -131,24 +130,10 @@ class FluTubeState extends State<FluTube>{
     super.initState();
     _needsShowThumb = !widget.autoPlay;
     if(_isPlaylist) {
-      _playlistUrls = List();
       _initialize((widget._videourls as List<String>)[0]); // Play the very first video of the playlist
-
-      _initializeAllVideos();
     } else {
       _initialize(widget._videourls as String);
     }
-  }
-
-  _initializeAllVideos() async {
-    for(String url in widget._videourls as List<String>) {
-      _playlistUrls.add(await _fetchVideoURL(url));
-    }
-  }
-
-  void _errorListener() {
-    if (!videoController.value.hasError) return;
-    if (videoController.value.errorDescription.contains("code: 403")) _initialize(_lastUrl);
   }
 
   void _initialize(String _url) {
@@ -170,7 +155,7 @@ class FluTubeState extends State<FluTube>{
           autoInitialize: widget.autoInitialize,
           autoPlay: widget.autoPlay,
           startAt: widget.startAt,
-          looping: widget.looping,
+          looping: _isPlaylist ? false : widget.looping,
           placeholder: widget.placeholder,
           showControls: widget.showControls,
           fullScreenByDefault: widget.fullscreenByDefault,
@@ -198,48 +183,59 @@ class FluTubeState extends State<FluTube>{
 
   _endListener() {
     // Video end callback
-    if(videoController.value.initialized && !widget.looping){
-      if(videoController.value.position >= videoController.value.duration){
-        if(isPlaying){
-          chewieController.pause();
-          chewieController.seekTo(Duration());
-        }
-        if(widget.onVideoEnd != null)
-          widget.onVideoEnd();
-        if(widget.showThumb && !_isPlaylist){
-          setState(() {
-            _needsShowThumb = true;
-          });
-        }
-        if(_isPlaylist && _currentlyPlaying < _playlistUrls.length - 1){
-          _playlistLoadNext();
+    if(videoController != null) {
+      if(videoController.value.initialized && !videoController.value.isBuffering) {
+        if(videoController.value.position >= videoController.value.duration){
+          if(isPlaying){
+            chewieController.pause();
+            chewieController.seekTo(Duration());
+          }
+          if(widget.onVideoEnd != null)
+            widget.onVideoEnd();
+          if(widget.showThumb && !_isPlaylist){
+            setState(() {
+              _needsShowThumb = true;
+            });
+          }
+          if(_isPlaylist) {
+            if(_currentlyPlaying < (widget._videourls as List<String>).length - 1){
+              _playlistLoadNext();
+            } else {
+              if(widget.looping) {
+                _playlistLoop();
+              }
+            }
+          }
         }
       }
     }
   }
 
+  _errorListener() {
+    if (!videoController.value.hasError) return;
+    if (videoController.value.errorDescription.contains("code: 403")) _initialize(_lastUrl);
+  }
+
   _playlistLoadNext() {
-    chewieController.dispose();
+    chewieController?.dispose();
     setState(() {
       _currentlyPlaying++;
     });
     videoController.pause();
     videoController = null;
-    videoController = VideoPlayerController.network(_playlistUrls[_currentlyPlaying]);
-    videoController.addListener(_playingListener);
-    videoController.addListener(_endListener);
-    chewieController = ChewieController(
-        videoPlayerController: videoController,
-        aspectRatio: widget.aspectRatio,
-        autoInitialize: true,
-        showControls: widget.showControls,
-        fullScreenByDefault: widget.fullscreenByDefault,
-        allowFullScreen: widget.allowFullScreen,
-        deviceOrientationsAfterFullScreen: widget.deviceOrientationAnterFullscreen,
-        systemOverlaysAfterFullScreen: widget.systemOverlaysAfterFullscreen,
-        allowedScreenSleep: widget.allowScreenSleep,
-        allowMuting: widget.allowMuting
-    );
+    print('FLAG');
+    _initialize((widget._videourls as List<String>)[_currentlyPlaying]);
+    chewieController.play();
+  }
+
+  _playlistLoop() {
+    chewieController?.dispose();
+    setState(() {
+      _currentlyPlaying = 0;
+    });
+    videoController.pause();
+    videoController = null;
+    _initialize((widget._videourls as List<String>)[0]);
     chewieController.play();
   }
 
