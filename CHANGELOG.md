@@ -1,6 +1,8 @@
 ## 0.8.0
 
 * Added native support for playlists
+* Fix looping bug
+* Fix #9 & #10 (thanks to @murilobaixou)
 
 ## 0.7.3
 
