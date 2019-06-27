@@ -44,7 +44,7 @@ class MyAppState extends State<MyApp> {
               aspectRatio: 16 / 9,
               allowMuting: false,
               looping: true,
-              deviceOrientationAnterFullscreen: [
+              deviceOrientationAfterFullscreen: [
                 DeviceOrientation.portraitUp,
                 DeviceOrientation.landscapeLeft,
                 DeviceOrientation.landscapeRight,

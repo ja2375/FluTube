@@ -1,3 +1,7 @@
+## 0.8.1
+
+* Fix typo (thanks to @marcosgallardo)
+
 ## 0.8.0
 
 * Added native support for playlists

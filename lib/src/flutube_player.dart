@@ -41,7 +41,7 @@ class FluTube extends StatefulWidget {
   final bool allowFullScreen;
 
   /// Device orientation when leaving fullscreen.
-  final List<DeviceOrientation> deviceOrientationAnterFullscreen;
+  final List<DeviceOrientation> deviceOrientationAfterFullscreen;
 
   /// System overlays when exiting fullscreen.
   final List<SystemUiOverlay> systemOverlaysAfterFullscreen;
@@ -79,7 +79,7 @@ class FluTube extends StatefulWidget {
     this.allowMuting = true,
     this.allowScreenSleep = false,
     this.allowFullScreen = true,
-    this.deviceOrientationAnterFullscreen,
+    this.deviceOrientationAfterFullscreen,
     this.systemOverlaysAfterFullscreen,
     this.onVideoStart,
     this.onVideoEnd,
@@ -102,7 +102,7 @@ class FluTube extends StatefulWidget {
     this.allowMuting = true,
     this.allowScreenSleep = false,
     this.allowFullScreen = true,
-    this.deviceOrientationAnterFullscreen,
+    this.deviceOrientationAfterFullscreen,
     this.systemOverlaysAfterFullscreen,
     this.onVideoStart,
     this.onVideoEnd,
@@ -160,7 +160,7 @@ class FluTubeState extends State<FluTube>{
           showControls: widget.showControls,
           fullScreenByDefault: widget.fullscreenByDefault,
           allowFullScreen: widget.allowFullScreen,
-          deviceOrientationsAfterFullScreen: widget.deviceOrientationAnterFullscreen,
+          deviceOrientationsAfterFullScreen: widget.deviceOrientationAfterFullscreen,
           systemOverlaysAfterFullScreen: widget.systemOverlaysAfterFullscreen,
           allowedScreenSleep: widget.allowScreenSleep,
           allowMuting: widget.allowMuting
