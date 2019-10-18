@@ -33,7 +33,7 @@ final flutubePlayer = Flutube(
   aspectRatio: 16 / 9,
   autoPlay: true,
   looping: true,
-  onVideoStart: () {),
+  onVideoStart: () {},
   onVideoEnd: () {},
 );
 ```
