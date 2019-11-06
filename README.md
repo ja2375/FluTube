@@ -28,7 +28,7 @@ dependencies:
 ```dart
 import 'package:flutube/flutube.dart';
 
-final flutubePlayer = Flutube(
+final flutubePlayer = FluTube(
   '<Youtube URL>',
   aspectRatio: 16 / 9,
   autoPlay: true,
