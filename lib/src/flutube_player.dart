@@ -7,7 +7,7 @@ import 'package:video_player/video_player.dart';
 
 class FluTube extends StatefulWidget {
   /// Youtube video URL(s)
-  var _videourls;
+  final _videourls;
 
   /// Initialize the Video on Startup. This will prep the video for playback.
   final bool autoInitialize;
@@ -64,7 +64,7 @@ class FluTube extends StatefulWidget {
   final VoidCallback onVideoEnd;
 
   FluTube(
-    @required String videourl, {
+    this._videourls, {
     Key key,
     this.aspectRatio,
     this.autoInitialize = false,
@@ -83,11 +83,11 @@ class FluTube extends StatefulWidget {
     this.onVideoStart,
     this.onVideoEnd,
   }) : super(key: key) {
-    this._videourls = videourl;
+    assert(_videourls is String, 'The video URL needs to be of type String.');
   }
 
   FluTube.playlist(
-    @required List<String> playlist, {
+    this._videourls, {
     Key key,
     this.aspectRatio,
     this.autoInitialize = false,
@@ -106,8 +106,8 @@ class FluTube extends StatefulWidget {
     this.onVideoStart,
     this.onVideoEnd,
   }) : super(key: key) {
-    assert(playlist.length > 0, 'Playlist should not be empty!');
-    this._videourls = playlist;
+    assert(_videourls is List<String>, 'The video playlist needs to be of type List<String>.');
+    assert(_videourls.length > 0, 'Playlist should not be empty!');
   }
 
   @override
@@ -328,7 +328,7 @@ class FluTubeState extends State<FluTube>{
       // For matching https://www.youtube.com/v/<VIDEOID>
       RegExp regExp5 = new RegExp(r"\/v\/([^#\&\?]{11})", caseSensitive: false, multiLine: false);
 
-      String matchedString = null;
+      String matchedString;
 
       if(regExp1.hasMatch(url)) {
         matchedString = regExp1.firstMatch(url).group(0);

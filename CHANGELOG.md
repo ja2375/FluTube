@@ -1,3 +1,7 @@
+## 0.8.3
+
+* Fix object types
+
 ## 0.8.2
 
 * Support for multiple YouTube URL schemas (#20) (thanks to @alanpachuau)
