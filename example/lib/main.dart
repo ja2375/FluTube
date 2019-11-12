@@ -14,9 +14,7 @@ class MyApp extends StatefulWidget {
 class MyAppState extends State<MyApp> {
   final List<String> playlist = <String>[
     'https://www.youtube.com/watch?v=fq4N0hgOWzU',
-    'https://www.youtube.com/watch?v=D-o4BqJxmJE',
-    'https://www.youtube.com/watch?v=hA0hrpR-o8U',
-    'https://www.youtube.com/watch?v=RS36gBEp8OI',
+    'https://youtu.be/IVTjpW3W33s',
   ];
   int currentPos;
   String stateText;

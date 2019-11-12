@@ -222,7 +222,6 @@ class FluTubeState extends State<FluTube>{
     });
     videoController.pause();
     videoController = null;
-    print('FLAG');
     _initialize((widget._videourls as List<String>)[_currentlyPlaying]);
     chewieController.play();
   }
@@ -247,7 +246,6 @@ class FluTubeState extends State<FluTube>{
 
   @override
   Widget build(BuildContext context) {
-    print(_currentlyPlaying);
     if(widget.showThumb && !isPlaying && _needsShowThumb){
       return Center(
         child: Container(

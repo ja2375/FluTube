@@ -1,3 +1,7 @@
+## 0.8.2
+
+* Support for multiple YouTube URL schemas (#20) (thanks to @alanpachuau)
+
 ## 0.8.1
 
 * Fix typo (thanks to @marcosgallardo)
