@@ -314,9 +314,40 @@ class FluTubeState extends State<FluTube>{
   Iterable<String> _allStringMatches(String text, RegExp regExp) => regExp.allMatches(text).map((m) => m.group(0));
 
   String _videoThumbURL(String yt) {
-    String id = yt.substring(yt.indexOf('v=') + 2);
-    if(id.contains('&'))
-      id = id.substring(0, id.indexOf('&'));
+    String id = _getVideoIdFromUrl(yt);
     return "http://img.youtube.com/vi/$id/0.jpg";
   }
+  
+  String _getVideoIdFromUrl(String url) {
+      // For matching https://youtu.be/<VIDEOID>
+      RegExp regExp1 = new RegExp(r"youtu\.be\/([^#\&\?]{11})", caseSensitive: false, multiLine: false);
+      // For matching https://www.youtube.com/watch?v=<VIDEOID>
+      RegExp regExp2 = new RegExp(r"\?v=([^#\&\?]{11})", caseSensitive: false, multiLine: false);
+      // For matching https://www.youtube.com/watch?x=yz&v=<VIDEOID>
+      RegExp regExp3 = new RegExp(r"\&v=([^#\&\?]{11})", caseSensitive: false, multiLine: false);
+      // For matching https://www.youtube.com/embed/<VIDEOID>
+      RegExp regExp4 = new RegExp(r"embed\/([^#\&\?]{11})", caseSensitive: false, multiLine: false);
+      // For matching https://www.youtube.com/v/<VIDEOID>
+      RegExp regExp5 = new RegExp(r"\/v\/([^#\&\?]{11})", caseSensitive: false, multiLine: false);
+
+      String matchedString = null;
+
+      if(regExp1.hasMatch(url)) {
+        matchedString = regExp1.firstMatch(url).group(0);
+      }
+      else if(regExp2.hasMatch(url)) {
+        matchedString = regExp2.firstMatch(url).group(0);
+      }
+      else if(regExp3.hasMatch(url)) {
+        matchedString = regExp3.firstMatch(url).group(0);
+      }
+      else if(regExp4.hasMatch(url)) {
+        matchedString = regExp4.firstMatch(url).group(0);
+      }
+      else if(regExp5.hasMatch(url)) {
+        matchedString = regExp5.firstMatch(url).group(0);
+      }
+
+      return matchedString != null ? matchedString.substring(matchedString.length - 11) : null;
+    }
 }
